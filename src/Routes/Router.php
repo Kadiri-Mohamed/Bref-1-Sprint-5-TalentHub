@@ -47,7 +47,7 @@ class Router
         if ($path === '')
             $path = '/';
         // echo $uri."<br>";
-        if (array_key_exists($path, self::routes[$method])) {
+        if (array_key_exists($path, self::$routes[$method])) {
             $controller = self::$routes[$method][$path]['controller'];
             $action = self::$routes[$method][$path]['action'];
 

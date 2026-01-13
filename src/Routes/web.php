@@ -9,3 +9,7 @@ Router::get('/', __DIR__ . '/../app/Controllers/HomeController.php' , 'index');
 echo "<pre>";
 var_dump(Router::$routes);
 echo "</pre>";
+
+
+/* Dispatch router */
+// Router::dispatch();
