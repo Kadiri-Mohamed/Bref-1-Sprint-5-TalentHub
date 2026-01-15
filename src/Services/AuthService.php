@@ -100,12 +100,24 @@ class AuthService
      */
     public function redirectAfterLogin(): void
     {
-        match ($this->getRole()) {
-            'candidate' => header('Location: ?page=candidate/dashboard'),
-            'recruiter' => header('Location: ?page=recruiter/dashboard'),
-            'admin'     => header('Location: ?page=admin/dashboard'),
-            default     => header('Location: ?page=home'),
-        };
+        $role = $_SESSION['role_name'];
+
+        switch ($role) {
+            case 'candidate':
+                header('Location: /?page=candidate/dashboard');
+                break;
+
+            case 'recruiter':
+                header('Location: /?page=recruiter/dashboard');
+                break;
+
+            case 'admin':
+                header('Location: /?page=admin/dashboard');
+                break;
+
+            default:
+                header('Location: /?page=home');
+        }
 
         exit;
     }

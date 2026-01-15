@@ -23,3 +23,10 @@
 
 </body>
 </html>
+
+<?php
+use App\Core\Session;
+
+// $userRole = $_SESSION['role_id'];
+$userRole = Session::get('role_id');
+echo $userRole;
