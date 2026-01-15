@@ -2,12 +2,15 @@
 
 use App\Routes\Router;
 use App\Controllers\LoginController;
+use App\Controllers\RegisterController;
 
-// Register GET route for displaying login form
-Router::get('/login', LoginController::class , 'login');
-
-// Register POST route for processing login form
+// login 
+Router::get('/login', LoginController::class , 'index');
 Router::post('/login', LoginController::class , 'login');
+
+// register
+Router::get('/register', RegisterController::class , 'index');
+Router::post('/register', RegisterController::class , 'register');
 
 /* Dispatch router */
 Router::dispatch();

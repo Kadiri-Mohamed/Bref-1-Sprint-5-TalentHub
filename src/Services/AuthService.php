@@ -34,7 +34,7 @@ class AuthService
             return false;
         }
 
-        $role = $this->roleRepository->findById($user->getRoleId());
+        $role = $this->roleRepository->findById($user->getRole()->getId());
 
         Session::regenerate();
 
