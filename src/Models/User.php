@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use App\Models\Role;
 
 class User
 {
@@ -8,20 +9,20 @@ class User
     private string $name;
     private string $email;
     private string $password;
-    private int $roleId;
+    private Role $role;
 
     public function __construct(
         int $id,
         string $name,
         string $email,
         string $password,
-        int $roleId
+        Role $role
     ) {
         $this->id       = $id;
         $this->name     = $name;
         $this->email    = $email;
         $this->password = $password;
-        $this->roleId   = $roleId;
+        $this->role   = $role;
     }
 
 
@@ -45,9 +46,9 @@ class User
         return $this->password;
     }
 
-    public function getRoleId(): int
+    public function getRole(): Role
     {
-        return $this->roleId;
+        return $this->role;
     }
 
     public function setName(string $name): void{

@@ -9,10 +9,12 @@ use PDO;
 class UserRepository
 {
     private PDO $db;
+    private RoleRepository $roleRepository;
 
     public function __construct()
     {
         $this->db = Database::getConnection();
+        $this->roleRepository = new RoleRepository(); 
     }
 
     /**
@@ -33,13 +35,15 @@ class UserRepository
         if (!$data) {
             return null;
         }
+        
+        $role = $this->roleRepository->findById((int) $data['role_id']);
 
         return new User(
             $data['id'],
             $data['name'],
             $data['email'],
             $data['password'],
-            $data['role_id']
+            $role 
         );
     }
 
@@ -53,16 +57,20 @@ class UserRepository
              VALUES (:name, :email, :password, :role_id)"
         );
 
+        $roleId = $data['role']  
+            ? $data['role']->getId() 
+            : $data['role_id'];
+
         return $stmt->execute([
-            'name'     => $data['name'],
-            'email'    => $data['email'],
+            'name' => $data['name'],
+            'email' => $data['email'],
             'password' => $data['password'],
-            'role_id'  => $data['role_id']
+            'role_id' => $roleId
         ]);
     }
 
     /**
-     * Find user by ID (optionnel, mais utile)
+     * Find user by ID
      */
     public function findById(int $id): ?User
     {
@@ -80,12 +88,14 @@ class UserRepository
             return null;
         }
 
+        $role = $this->roleRepository->findById((int) $data['role_id']);
+
         return new User(
             $data['id'],
             $data['name'],
             $data['email'],
             $data['password'],
-            $data['role_id']
+            $role  
         );
     }
 }
