@@ -49,10 +49,6 @@ class AuthService
     /**
      * Logout user
      */
-    public function logout(): void
-    {
-        Session::destroy();
-    }
 
     /**
      * Check if user is authenticated
@@ -76,9 +72,17 @@ class AuthService
     public function requireAuth(): void
     {
         if (!$this->isAuthenticated()) {
-            header('Location: ?page=login');
+            header('Location: /login');
             exit;
         }
+    }
+
+    public function logout(): void
+    {
+        Session::destroy();
+        
+        header('Location: /login');
+        exit;
     }
 
     /**
@@ -104,19 +108,19 @@ class AuthService
 
         switch ($role) {
             case 'candidate':
-                header('Location: /?page=candidate/dashboard');
+                header('Location: /candidate/dashboard');
                 break;
 
             case 'recruiter':
-                header('Location: /?page=recruiter/dashboard');
+                header('Location: /recruiter/dashboard');
                 break;
 
             case 'admin':
-                header('Location: /?page=admin/dashboard');
+                header('Location: /admin/dashboard');
                 break;
 
             default:
-                header('Location: /?page=home');
+                header('Location: /login');
         }
 
         exit;
