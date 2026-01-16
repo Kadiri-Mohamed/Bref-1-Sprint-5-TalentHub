@@ -39,6 +39,8 @@ class AuthService
         Session::regenerate();
 
         Session::set('user_id', $user->getId());
+        Session::set('user_email', $user->getEmail()); // Ajoutez ceci
+        Session::set('user_name', $user->getName());   // Ajoutez ceci
         Session::set('role_id', $role->getId());
         Session::set('role_name', $role->getName());
         Session::set('logged_in', true);
@@ -49,6 +51,13 @@ class AuthService
     /**
      * Logout user
      */
+    public function logout(): void
+    {
+        Session::destroy();
+        
+        header('Location: /login');
+        exit;
+    }
 
     /**
      * Check if user is authenticated
@@ -77,14 +86,6 @@ class AuthService
         }
     }
 
-    public function logout(): void
-    {
-        Session::destroy();
-        
-        header('Location: /login');
-        exit;
-    }
-
     /**
      * Require a specific role
      */
@@ -94,7 +95,7 @@ class AuthService
 
         if ($this->getRole() !== $role) {
             http_response_code(403);
-            require __DIR__ . '/../Views/errors/403.php';
+            echo "Accès interdit : Rôle requis: {$role}";
             exit;
         }
     }
@@ -103,8 +104,17 @@ class AuthService
      * Redirect user after login based on role
      */
     public function redirectAfterLogin(): void
-    {
-        $role = $_SESSION['role_name'];
+{
+    // Debug
+    error_log("Redirection après login, session: " . print_r($_SESSION, true));
+    
+    $role = Session::get('role_name');
+    error_log("Rôle récupéré: " . $role);
+
+        if (!$role) {
+            header('Location: /login');
+            exit;
+        }
 
         switch ($role) {
             case 'candidate':
