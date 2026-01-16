@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Repositories\UserRepository;
 use App\Repositories\RoleRepository;
 use App\Utils\Validator;
+use App\Core\Twig;
 
 class RegisterController
 {
@@ -19,7 +20,10 @@ class RegisterController
 
     public function index(): void
     {
-        require __DIR__ . '/../Views/auth/register.php';
+        Twig::display('auth/register.twig', [
+            'title' => 'Inscription',
+            'post' => $_POST ?? []
+        ]);
     }
 
     public function register(): void
@@ -30,27 +34,35 @@ class RegisterController
         $roleName = $_POST['role'] ?? '';
 
         if (!Validator::required($name) || !Validator::alpha($name)) {
-            $error = 'Invalid name.';
+            $error = 'Nom invalide. Utilisez uniquement des lettres.';
         } elseif (!Validator::email($email)) {
-            $error = 'Invalid email address.';
+            $error = 'Adresse email invalide.';
         } elseif (!Validator::minLength($password, 6)) {
-            $error = 'Password must be at least 6 characters.';
+            $error = 'Le mot de passe doit contenir au moins 6 caractères.';
         } elseif (!Validator::inArray($roleName, ['candidate', 'recruiter'])) {
-            $error = 'Invalid role selected.';
+            $error = 'Profil invalide sélectionné.';
         } elseif ($this->userRepository->findByEmail($email)) {
-            $error = 'Email already exists.';
+            $error = 'Cette adresse email est déjà utilisée.';
         }
 
         if (isset($error)) {
-            require __DIR__ . '/../Views/auth/register.php';
+            Twig::display('auth/register.twig', [
+                'error' => $error,
+                'title' => 'Inscription',
+                'post' => $_POST
+            ]);
             return;
         }
 
         $role = $this->roleRepository->findByName($roleName);
 
         if (!$role) {
-            $error = 'Role not found.';
-            require __DIR__ . '/../Views/auth/register.php';
+            $error = 'Profil non trouvé.';
+            Twig::display('auth/register.twig', [
+                'error' => $error,
+                'title' => 'Inscription',
+                'post' => $_POST
+            ]);
             return;
         }
 
