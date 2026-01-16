@@ -3,14 +3,18 @@
 namespace App\Controllers;
 
 use App\Services\AuthService;
+use App\Core\Twig;
 
 class LoginController
 {
-
     public function index($error = '')
     {
-        require __DIR__ . '/../Views/auth/login.php';
+        Twig::display('auth/login.twig', [
+            'error' => $error,
+            'title' => 'Connexion'
+        ]);
     }
+    
     public function login()
     {
         $auth = new AuthService();
@@ -22,11 +26,12 @@ class LoginController
             if ($auth->login($email, $password)) {
                 $auth->redirectAfterLogin();
             } else {
-                $error = "Invalid email or password";
-                $this->index($error);
+                $error = "Email ou mot de passe incorrect";
+                Twig::display('auth/login.twig', [
+                    'error' => $error,
+                    'title' => 'Connexion'
+                ]);
             }
-
-
         }
     }
 }
