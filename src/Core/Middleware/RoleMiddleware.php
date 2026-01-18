@@ -2,7 +2,7 @@
 // src/Core/Middleware/RoleMiddleware.php
 
 namespace App\Core\Middleware;
-
+use App\Core\Twig;
 use App\Core\Session;
 
 class RoleMiddleware implements MiddlewareInterface
@@ -18,10 +18,7 @@ class RoleMiddleware implements MiddlewareInterface
     public function handle(): void
     {
         if (Session::get('role_name') !== $this->requiredRole) {
-            http_response_code(403);
-            echo "Accès interdit : Ce rôle n'a pas les permissions nécessaires.";
-            echo "\n";
-            echo  Session::get('role_name')."!=" . $this->requiredRole;
+            twig::display('errors/403.twig');
             exit;
         }
     }

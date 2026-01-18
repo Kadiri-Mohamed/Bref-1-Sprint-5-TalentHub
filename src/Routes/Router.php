@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Routes;
-
+use App\Core\Twig;
 class Router
 {
     public static $routes = [];
@@ -46,7 +46,7 @@ class Router
         // Vérifier si la route existe
         if (!isset(self::$routes[$method][$path])) {
             http_response_code(404);
-            echo "404 - Page non trouvée";
+            Twig::display('errors/404.twig');
             return;
         }
 
@@ -85,8 +85,6 @@ class Router
                 }
             }
         }
-
-        http_response_code(500);
-        echo "500 - Erreur interne du serveur (Format de route invalide)";
+        twig::display('errors/500.twig');
     }
 }
